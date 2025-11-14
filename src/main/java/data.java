@@ -40,7 +40,7 @@ public class data {
     }
 
     private static void generateQRCodesPerRow() {
-        String sql = "SELECT RollNum, StudentId, date, status FROM attendance"; // adjust columns if needed
+        String sql = "SELECT RollNum, Name, Branch, FatherName FROM Studentregistration"; // adjust columns if needed
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -49,17 +49,30 @@ public class data {
             System.out.println("Connected to DB, generating QR codes per row...");
 
             while (rs.next()) {
-                int rollNum = rs.getInt("RollNum"); // primary key
-                Integer studentId = rs.getObject("StudentId") != null ? rs.getInt("StudentId") : null;
-                java.sql.Date date = rs.getDate("date");
-                String status = rs.getString("status");
+                // RollNum read (assuming it's numeric in DB)
+                Integer rollNumObj = (Integer) rs.getObject("RollNum");
+                if (rollNumObj == null) {
+                    System.err.println("Skipping row with NULL RollNum");
+                    continue;
+                }
+                int rollNum = rollNumObj;
+
+                // NAME must be read as string (NOT getInt)
+                String Name = rs.getString("Name");
+                if (Name != null) Name = Name.trim();
+
+                String Branch = rs.getString("Branch");
+                if (Branch != null) Branch = Branch.trim();
+
+                String FatherName = rs.getString("FatherName");
+                if (FatherName != null) FatherName = FatherName.trim();
 
                 // Build a text payload for the QR code. Change formatting as desired.
                 StringBuilder payload = new StringBuilder();
                 payload.append("RollNum: ").append(rollNum).append("\n");
-                payload.append("StudentId: ").append(studentId == null ? "NULL" : studentId).append("\n");
-                payload.append("Date: ").append(date == null ? "NULL" : date.toString()).append("\n");
-                payload.append("Status: ").append(status == null ? "NULL" : status);
+                payload.append("Name: ").append(Name == null ? "NULL" : Name).append("\n");
+                payload.append("Branch: ").append(Branch == null ? "NULL" : Branch).append("\n");
+                payload.append("FatherName: ").append(FatherName == null ? "NULL" : FatherName);
 
                 String fileName = String.format("qrcode_%d.png", rollNum);
                 generateQRCodeImage(payload.toString(), 300, 300, fileName);
@@ -73,7 +86,7 @@ public class data {
     }
 
     private static void generateSingleQRCodeForAllRows() {
-        String sql = "SELECT RollNum, StudentId, date, status FROM attendance ORDER BY RollNum";
+        String sql = "SELECT RollNum, Name, Branch, FatherName FROM Studentregistration ORDER BY RollNum";
 
         StringBuilder allRows = new StringBuilder();
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
@@ -81,15 +94,23 @@ public class data {
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                int rollNum = rs.getInt("RollNum");
-                Integer studentId = rs.getObject("StudentId") != null ? rs.getInt("StudentId") : null;
-                java.sql.Date date = rs.getDate("date");
-                String status = rs.getString("status");
+                Integer rollNumObj = (Integer) rs.getObject("RollNum");
+                if (rollNumObj == null) continue;
+                int rollNum = rollNumObj;
+
+                String Name = rs.getString("Name");
+                if (Name != null) Name = Name.trim();
+
+                String Branch = rs.getString("Branch");
+                if (Branch != null) Branch = Branch.trim();
+
+                String FatherName = rs.getString("FatherName");
+                if (FatherName != null) FatherName = FatherName.trim();
 
                 allRows.append("RollNum=").append(rollNum)
-                        .append(", StudentId=").append(studentId == null ? "NULL" : studentId)
-                        .append(", Date=").append(date == null ? "NULL" : date.toString())
-                        .append(", Status=").append(status == null ? "NULL" : status)
+                        .append(", Name=").append(Name == null ? "NULL" : Name)
+                        .append(", Branch=").append(Branch == null ? "NULL" : Branch)
+                        .append(", FatherName=").append(FatherName == null ? "NULL" : FatherName)
                         .append("\n");
             }
 
@@ -128,5 +149,3 @@ public class data {
         }
     }
 }
-
-
