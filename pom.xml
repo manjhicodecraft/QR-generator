@@ -37,6 +37,8 @@
           <artifactId>mysql-connector-java</artifactId>
           <version>8.0.33</version> <!-- Use a compatible version -->
       </dependency>
+
+
   </dependencies>
 
 
