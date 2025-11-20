@@ -43,6 +43,19 @@
           <artifactId>webcam-capture</artifactId>
           <version>0.3.12</version>
       </dependency>
+
+      <dependency>
+          <groupId>com.github.sarxos</groupId>
+          <artifactId>webcam-capture-driver-openimaj</artifactId>
+          <version>0.3.12</version>
+      </dependency>
+
+      <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-nop</artifactId>
+          <version>2.0.7</version>
+          <scope>runtime</scope>
+      </dependency>
   </dependencies>
 
 

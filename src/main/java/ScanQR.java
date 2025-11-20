@@ -23,7 +23,7 @@ public class ScanQR {
             qrFile = new File(args[0]);
         } else {
             // fallback path you tried
-            qrFile = new File("D:\\Java project\\AttendSys\\qrcode_1.png");
+            qrFile = new File("D:\\Java project\\AttendSys\\qrcode_2.png");
         }
 
         System.out.println("Program working dir: " + new File(".").getAbsolutePath());
