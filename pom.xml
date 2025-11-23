@@ -12,7 +12,21 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
+
+  <repositories>
+    <repository>
+      <id>central</id>
+      <name>Maven Central</name>
+      <url>https://repo1.maven.org/maven2/</url>
+    </repository>
+    <repository>
+      <id>sarxos-repository</id>
+      <url>https://raw.githubusercontent.com/sarxos/webcam-capture/maven/</url>
+    </repository>
+  </repositories>
 
   <dependencies>
     <dependency>
@@ -48,6 +62,12 @@
           <groupId>com.github.sarxos</groupId>
           <artifactId>webcam-capture-driver-openimaj</artifactId>
           <version>0.3.12</version>
+          <exclusions>
+              <exclusion>
+                  <groupId>com.nativelibs4java</groupId>
+                  <artifactId>bridj</artifactId>
+              </exclusion>
+          </exclusions>
       </dependency>
 
       <dependency>
